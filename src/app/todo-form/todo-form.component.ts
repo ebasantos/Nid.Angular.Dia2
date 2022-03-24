@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { environment } from './../../environments/environment';
+import { Todo } from './../todo/model/todo';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TodoService } from '../services/todo.service';
+import { Observable, of, map } from 'rxjs';
 
 @Component({
   selector: 'app-todo-form',
@@ -7,7 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./todo-form.component.css'],
 })
 export class TodoFormComponent implements OnInit {
-  todoList: { descricao: string }[] = [];
+  todoList$: Observable<Todo[]> = of();
   todoForm = new FormGroup({
     descricao: new FormControl('', [
       Validators.required,
@@ -15,9 +20,35 @@ export class TodoFormComponent implements OnInit {
       Validators.maxLength(100),
     ]),
   });
-  constructor() {}
+  constructor(private todoService: TodoService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.obterDados();
+  }
+
+  concluirTarefa(item: Todo): void {
+    item.concluido = !item.concluido;
+    this.todoService.concluirTarefa(item).subscribe(
+      (resposta) => this.obterDados(),
+      (erro) => this.tratarErro(erro)
+    );
+  }
+
+  removerTarefa(id: number): void {
+    this.todoService.removerTarefa(id).subscribe(
+      (resposta) => this.obterDados(),
+      (erro) => this.tratarErro(erro)
+    );
+  }
+
+  private tratarErro(erro: any): void {
+    console.log('ops... não foi possível obter os dados');
+    this.obterDados();
+  }
+
+  obterDados(): void {
+    this.todoList$ = this.todoService.obterDados().pipe(map((res) => res));
+  }
 
   salvar() {
     if (this.todoForm.invalid) {
@@ -29,7 +60,12 @@ export class TodoFormComponent implements OnInit {
     let newTodo = {
       descricao: this.todoForm.controls['descricao'].value,
     };
-    this.todoList.push(newTodo);
+
+    this.todoService.salvar(newTodo).subscribe(
+      (resposta) => this.obterDados(),
+      (erro) => this.tratarErro(erro)
+    );
+
     this.todoForm.reset();
   }
 }

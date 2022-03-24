@@ -8,7 +8,7 @@ import { Todo } from './model/todo';
 })
 export class TodoComponent implements OnInit {
   @Input() title: string = 'titulo padrão';
-  model: Todo = { descricao: '' };
+  model: Todo = { descricao: '', concluido: false, id: 0 };
   todoList: Todo[] = [];
   constructor() {}
 
@@ -23,6 +23,8 @@ export class TodoComponent implements OnInit {
     alert('registro inserido com sucesso');
     let newTodo: Todo = {
       descricao: this.model.descricao,
+      concluido: false,
+      id: 0,
     };
     this.todoList.push(newTodo);
     this.model.descricao = '';

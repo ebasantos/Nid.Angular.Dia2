@@ -30,12 +30,18 @@
       </div>
     </div>
 
-    <div class="row pt-3">
-      <ul>
-        <li *ngFor="let todo of todoList">
-          <span>item: </span>{{todo.descricao}}
-        </li>
-      </ul>
+    <div class="pt-3">
+      <div *ngFor="let todo of todoList$ | async" class="row">
+        <div class="p-3 mb-2 col-6 text-white" [ngClass]="!todo.concluido? 'bg-success' : 'bg-danger'">
+          {{todo.descricao}}
+        </div>
+        <div class="form-check form-switch col-1 ">
+          <input class="form-check-input" type="checkbox" [checked]="todo.concluido" (click)="concluirTarefa(todo)">
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-danger" (click)="removerTarefa(todo.id)">Apagar</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
