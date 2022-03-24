@@ -1,0 +1,29 @@
+<p>{{title}}</p>
+
+<div class="content text-center">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <form>
+          <div class="col-12">
+            <span>Descricao</span>
+          </div>
+          <div class="col-12 pb-3">
+            <input class="form-control" name="descricao" [(ngModel)]="model.descricao">
+          </div>
+          <div class=" col-12">
+            <button class="btn btn-primary" type="button" (click)="salvar()">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row pt-3">
+      <ul>
+        <li *ngFor="let todo of todoList">
+          <span>item: </span>{{todo.descricao}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

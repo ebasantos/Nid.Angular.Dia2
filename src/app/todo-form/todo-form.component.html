@@ -1,0 +1,41 @@
+<p>Cadastro de tarefas - Reactive form</p>
+
+<div class="content text-center">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-6">
+        <form [formGroup]="todoForm" (ngSubmit)="salvar()">
+          <div class="col-12">
+            <span>Descricao</span>
+          </div>
+          <div class="col-12 pb-3">
+            <input class="form-control" formControlName="descricao">
+            <span class="text-danger" *ngIf="todoForm.controls['descricao'].touched &&
+                     todoForm.controls['descricao'].hasError('required')">
+              Ops... este campo não pode ser nulo
+            </span>
+            <span class="text-danger" *ngIf="todoForm.controls['descricao'].touched &&
+                                 todoForm.controls['descricao'].hasError('maxlength')">
+              Ops... Tamanho máximo deve ser de 100 caracteres
+            </span>
+            <span class="text-danger" *ngIf="todoForm.controls['descricao'].touched &&
+                                             todoForm.controls['descricao'].hasError('minlength')">
+              Ops... Tamanho minimo deve ser de 5 caracteres
+            </span>
+          </div>
+          <div class=" col-12">
+            <button class="btn btn-primary" [disabled]="todoForm.invalid" type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row pt-3">
+      <ul>
+        <li *ngFor="let todo of todoList">
+          <span>item: </span>{{todo.descricao}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
